@@ -1,8 +1,8 @@
 const Sidebar = () => {
   return (
     <>
-      <div className="w-72 bg-white min-h-screen">
-        <div className="flex items-center justify-center h-20 py-6 px-8">
+      <div className="min-h-screen w-72 bg-white">
+        <div className="flex h-20 items-center justify-center px-8 py-6">
           <h1 className="text-2xl font-bold text-[#333]">STOCKY</h1>
         </div>
 
