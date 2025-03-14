@@ -19,7 +19,10 @@ const ProductsPage = async () => {
         </Button>
       </div>
 
-      <DataTable columns={tableProducts} data={products} />
+      <DataTable
+        columns={tableProducts}
+        data={JSON.parse(JSON.stringify(products))}
+      />
     </div>
   );
 };
