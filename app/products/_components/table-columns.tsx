@@ -3,6 +3,7 @@
 import { Badge } from "@/app/_components/ui/badge";
 import { Product } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
+import { CircleDashedIcon } from "lucide-react";
 
 export const tableProducts: ColumnDef<Product>[] = [
   {
@@ -22,14 +23,15 @@ export const tableProducts: ColumnDef<Product>[] = [
     header: "Status",
     cell: (row) => {
       const product = row.row.original;
-      const label = product.stock <= 0 ? "Em Falta" : "Em Estoque";
+      const label = product.stock <= 0 ? "Fora de estoque" : "Em estoque";
 
       return (
         <Badge
-          className="w-fit"
-          variant={product.stock <= 0 ? "default" : "outline"}
+          className="w-fit gap-1"
+          variant={product.stock <= 0 ? "outline" : "default"}
         >
-          <li>{label}</li>
+          <CircleDashedIcon size={16} />
+          {label}
         </Badge>
       );
     },

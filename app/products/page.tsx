@@ -1,4 +1,4 @@
-import { PlusIcon } from "lucide-react";
+import { CirclePlusIcon } from "lucide-react";
 import { Button } from "../_components/ui/button";
 import { DataTable } from "../_components/ui/data-table";
 import { tableProducts } from "./_components/table-columns";
@@ -14,7 +14,7 @@ const ProductsPage = async () => {
           <h1 className="text-3xl font-bold text-slate-900">Produtos</h1>
         </div>
         <Button className="cursor-pointer gap-2">
-          <PlusIcon size={20} />
+          <CirclePlusIcon size={20} />
           Novo produto
         </Button>
       </div>
