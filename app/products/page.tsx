@@ -1,8 +1,7 @@
-import { CirclePlusIcon } from "lucide-react";
-import { Button } from "../_components/ui/button";
 import { DataTable } from "../_components/ui/data-table";
 import { tableProducts } from "./_components/table-columns";
 import queryProduct from "../data-access/product/query-product";
+import AddProductsButton from "./_components/add-products-button";
 
 const ProductsPage = async () => {
   const products = await queryProduct();
@@ -13,10 +12,7 @@ const ProductsPage = async () => {
           <span className="text-xs text-[#00A180]">Gestão de Produtos</span>
           <h1 className="text-3xl font-bold text-slate-900">Produtos</h1>
         </div>
-        <Button className="cursor-pointer gap-2">
-          <CirclePlusIcon size={20} />
-          Novo produto
-        </Button>
+        <AddProductsButton />
       </div>
 
       <DataTable
