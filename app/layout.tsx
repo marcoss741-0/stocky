@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-br">
-      <body className={`${montserrat.variable} antialiased`}>
+      <body className={`${montserrat.className} antialiased`}>
         <div className="flex gap-8">
           <Sidebar />
           {children}

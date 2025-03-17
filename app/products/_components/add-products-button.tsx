@@ -12,7 +12,6 @@ import {
 } from "../../_components/ui/dialog";
 import { CirclePlusIcon } from "lucide-react";
 import { Button } from "../../_components/ui/button";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -25,26 +24,16 @@ import {
 } from "@/app/_components/ui/form";
 import { Input } from "@/app/_components/ui/input";
 import { NumericFormat } from "react-number-format";
-
-const formSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, { message: "O nome do produto é obrigatorio" }),
-
-  price: z.number().min(0.01, { message: "O preco do produto é obrigatorio" }),
-
-  stock: z.coerce
-    .number()
-    .positive({
-      message: "O estoque não pode ser negativo",
-    })
-    .int()
-    .min(1, { message: "O estoque do produto é obrigatorio" }),
-});
+import createProduct from "@/app/_actions/products/create-products";
+import { Loader } from "lucide-react";
+import { useState } from "react";
+import {
+  formSchema,
+  SCHEMA,
+} from "@/app/_actions/products/create-products/schema";
 
 const AddProductsButton = () => {
-  type SCHEMA = z.infer<typeof formSchema>;
+  const [dialogIsOpen, setDialogIsOpen] = useState(false);
 
   const form = useForm<SCHEMA>({
     resolver: zodResolver(formSchema),
@@ -56,13 +45,23 @@ const AddProductsButton = () => {
     },
   });
 
-  const onSubmit = (data: SCHEMA) => {
-    console.log({ data });
+  const onSubmit = async (data: SCHEMA) => {
+    try {
+      await createProduct({
+        name: data.name,
+        price: data.price,
+        stock: data.stock,
+      });
+
+      setDialogIsOpen(false);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
     <>
-      <Dialog>
+      <Dialog open={dialogIsOpen} onOpenChange={setDialogIsOpen}>
         <DialogTrigger asChild>
           <Button className="cursor-pointer gap-2">
             <CirclePlusIcon size={20} />
@@ -150,7 +149,12 @@ const AddProductsButton = () => {
                   </Button>
                 </DialogClose>
 
-                <Button type="submit">Cadastrar</Button>
+                <Button type="submit">
+                  {form.formState.isSubmitting && (
+                    <Loader className="mr-2 animate-spin" />
+                  )}
+                  Salvar
+                </Button>
               </DialogFooter>
             </form>
           </Form>
