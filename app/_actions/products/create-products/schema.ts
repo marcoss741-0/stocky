@@ -6,7 +6,7 @@ export const formSchema = z.object({
     .trim()
     .min(1, { message: "O nome do produto é obrigatorio" }),
 
-  price: z.number().min(0.01, { message: "O preco do produto é obrigatorio" }),
+  price: z.number().min(0.01, { message: "O preço do produto é obrigatorio" }),
 
   stock: z.coerce
     .number()
