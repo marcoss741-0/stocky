@@ -1,6 +1,8 @@
 import { z } from "zod";
 
 export const formSchema = z.object({
+  id: z.string().uuid().optional(),
+
   name: z
     .string()
     .trim()
@@ -17,4 +19,4 @@ export const formSchema = z.object({
     .min(1, { message: "O estoque do produto é obrigatorio" }),
 });
 
-export type SCHEMA = z.infer<typeof formSchema>;
+export type UpsertProductSchema = z.infer<typeof formSchema>;
