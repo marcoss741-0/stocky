@@ -83,6 +83,18 @@ const UpsertCheetDialog = ({ data, products }: UpsertCheetDialogProps) => {
       );
 
       if (productExists) {
+        const isOutOfStock =
+          productExists.quantity + data.quantity > selectedProduct.stock;
+
+        if (isOutOfStock) {
+          form.setError("quantity", {
+            message: "Quantidade insuficiente em estoque",
+          });
+          return currentProducts;
+        }
+
+        form.reset();
+
         return currentProducts.map((product) => {
           if (product.id === data.productId) {
             return {
@@ -90,9 +102,21 @@ const UpsertCheetDialog = ({ data, products }: UpsertCheetDialogProps) => {
               quantity: product.quantity + data.quantity,
             };
           }
+
           return product;
         });
       }
+
+      const isOutOfStock = data.quantity > selectedProduct.stock;
+      if (isOutOfStock) {
+        form.setError("quantity", {
+          message: "Quantidade insuficiente em estoque",
+        });
+        return currentProducts;
+      }
+
+      form.reset();
+
       return [
         ...currentProducts,
         {
@@ -102,7 +126,6 @@ const UpsertCheetDialog = ({ data, products }: UpsertCheetDialogProps) => {
         },
       ];
     });
-    form.reset();
   };
   const totalProducts = useMemo(() => {
     return selectedProduct.reduce((acc, product) => {
