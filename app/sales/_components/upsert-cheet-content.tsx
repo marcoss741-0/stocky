@@ -34,11 +34,13 @@ import {
   TableRow,
 } from "@/app/_components/ui/table";
 import formatCurrency from "@/app/_helpers/currency";
+import TableDropdownMenuSales from "./table-dropdown-menu";
 
 interface UpsertCheetDialogProps {
   products: Product[];
   data: ComboboxOption[];
 }
+
 interface SelectedProducts {
   id: string;
   name: string;
@@ -107,6 +109,11 @@ const UpsertCheetDialog = ({ data, products }: UpsertCheetDialogProps) => {
       return acc + product.price * product.quantity;
     }, 0);
   }, [selectedProduct]);
+  const OnDelete = (productId: string) => {
+    setSelectedProduct((currentProducts) => {
+      return currentProducts.filter((product) => product.id !== productId);
+    });
+  };
 
   return (
     <>
@@ -177,6 +184,7 @@ const UpsertCheetDialog = ({ data, products }: UpsertCheetDialogProps) => {
               <TableHead>Preço/Uni</TableHead>
               <TableHead>Quantidade</TableHead>
               <TableHead>Total</TableHead>
+              <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -187,6 +195,12 @@ const UpsertCheetDialog = ({ data, products }: UpsertCheetDialogProps) => {
                 <TableCell>{product.quantity}</TableCell>
                 <TableCell>
                   {formatCurrency(product.price * product.quantity)}
+                </TableCell>
+                <TableCell>
+                  <TableDropdownMenuSales
+                    onDelete={OnDelete}
+                    product={product}
+                  />
                 </TableCell>
               </TableRow>
             ))}
