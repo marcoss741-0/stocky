@@ -6,6 +6,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { CircleDashedIcon } from "lucide-react";
 
 import TableDropdownMenu from "./table-dropdown-menu";
+import formatCurrency from "@/app/_helpers/currency";
 
 export const tableProducts: ColumnDef<Product>[] = [
   {
@@ -17,10 +18,7 @@ export const tableProducts: ColumnDef<Product>[] = [
     header: "Preço",
     cell: (row) => {
       const product = row.row.original;
-      return new Intl.NumberFormat("pt-BR", {
-        style: "currency",
-        currency: "BRL",
-      }).format(Number(product.price));
+      return formatCurrency(Number(product.price));
     },
   },
   {
