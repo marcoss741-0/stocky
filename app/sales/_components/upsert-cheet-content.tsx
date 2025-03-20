@@ -21,7 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Product } from "@prisma/client";
 import {
   Table,
@@ -102,6 +102,11 @@ const UpsertCheetDialog = ({ data, products }: UpsertCheetDialogProps) => {
     });
     form.reset();
   };
+  const totalProducts = useMemo(() => {
+    return selectedProduct.reduce((acc, product) => {
+      return acc + product.price * product.quantity;
+    }, 0);
+  }, [selectedProduct]);
 
   return (
     <>
@@ -165,7 +170,7 @@ const UpsertCheetDialog = ({ data, products }: UpsertCheetDialogProps) => {
         </Form>
 
         <Table className="w-full">
-          <TableCaption>Ultimas vendas realizadas</TableCaption>
+          <TableCaption>Produtos adicionados á venda</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Produto</TableHead>
@@ -189,15 +194,9 @@ const UpsertCheetDialog = ({ data, products }: UpsertCheetDialogProps) => {
           <TableFooter>
             <TableRow>
               <TableHead className="text-left">Total</TableHead>
-              <TableHead></TableHead>
-              <TableHead></TableHead>
-              <TableHead className="text-left">
-                {formatCurrency(
-                  selectedProduct.reduce((acc, product) => {
-                    return acc + product.price * product.quantity;
-                  }, 0),
-                )}
-              </TableHead>
+              <TableCell colSpan={3} className="text-right">
+                {formatCurrency(totalProducts)}
+              </TableCell>
             </TableRow>
           </TableFooter>
         </Table>
