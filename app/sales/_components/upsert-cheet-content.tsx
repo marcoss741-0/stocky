@@ -14,11 +14,12 @@ import { Input } from "@/app/_components/ui/input";
 import {
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from "@/app/_components/ui/sheet";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PlusIcon } from "lucide-react";
+import { CheckIcon, PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useMemo, useState } from "react";
@@ -35,6 +36,8 @@ import {
 } from "@/app/_components/ui/table";
 import formatCurrency from "@/app/_helpers/currency";
 import TableDropdownMenuSales from "./table-dropdown-menu";
+import createSale from "@/app/_actions/sales/create-sale";
+import { toast } from "sonner";
 
 interface UpsertCheetDialogProps {
   products: Product[];
@@ -137,6 +140,20 @@ const UpsertCheetDialog = ({ data, products }: UpsertCheetDialogProps) => {
       return currentProducts.filter((product) => product.id !== productId);
     });
   };
+  const onSubmitSales = async () => {
+    try {
+      await createSale({
+        products: selectedProduct.map((product) => ({
+          id: product.id,
+          quantity: product.quantity,
+        })),
+      });
+      toast.success("Venda cadastrada com sucesso");
+    } catch (error) {
+      toast.error("Ocorreu um erro ao cadastrar a venda.");
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -237,6 +254,17 @@ const UpsertCheetDialog = ({ data, products }: UpsertCheetDialogProps) => {
             </TableRow>
           </TableFooter>
         </Table>
+
+        <SheetFooter>
+          <Button
+            className="w-full gap-2"
+            disabled={!selectedProduct.length}
+            onClick={onSubmitSales}
+          >
+            <CheckIcon size={16} />
+            Cadastrar Venda
+          </Button>
+        </SheetFooter>
       </SheetContent>
     </>
   );
