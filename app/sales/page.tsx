@@ -1,11 +1,8 @@
 "use server";
 
-import { PlusCircleIcon } from "lucide-react";
-import { Button } from "../_components/ui/button";
 import { ComboboxOption } from "../_components/ui/combobox";
-import { Sheet, SheetTrigger } from "../_components/ui/sheet";
 import { queryProduct } from "../data-access/product/query-product";
-import UpsertCheetDialog from "./_components/upsert-cheet-content";
+import CreateSalesButton from "./_components/create-sales-button";
 
 const Sales = async () => {
   const products = await queryProduct();
@@ -24,15 +21,10 @@ const Sales = async () => {
               Gestão de Vendas
             </h1>
           </div>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button>
-                <PlusCircleIcon size={20} />
-                Nova Venda
-              </Button>
-            </SheetTrigger>
-            <UpsertCheetDialog products={products} data={productOptions} />
-          </Sheet>
+          <CreateSalesButton
+            productOptions={productOptions}
+            products={products}
+          />
         </div>
 
         {/* <DataTable

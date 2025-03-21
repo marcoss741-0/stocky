@@ -42,6 +42,7 @@ import { toast } from "sonner";
 interface UpsertCheetDialogProps {
   products: Product[];
   data: ComboboxOption[];
+  onClose: () => void;
 }
 
 interface SelectedProducts {
@@ -51,7 +52,11 @@ interface SelectedProducts {
   price: number;
 }
 
-const UpsertCheetDialog = ({ data, products }: UpsertCheetDialogProps) => {
+const UpsertCheetDialog = ({
+  data,
+  products,
+  onClose,
+}: UpsertCheetDialogProps) => {
   const formSchema = z.object({
     productId: z.string().uuid({
       message: "Selecione um produto",
@@ -149,6 +154,7 @@ const UpsertCheetDialog = ({ data, products }: UpsertCheetDialogProps) => {
         })),
       });
       toast.success("Venda cadastrada com sucesso");
+      onClose();
     } catch (error) {
       toast.error("Ocorreu um erro ao cadastrar a venda.");
       console.error(error);

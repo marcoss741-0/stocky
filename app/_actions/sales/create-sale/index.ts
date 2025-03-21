@@ -2,6 +2,7 @@
 
 import { db } from "@/app/_lib/prisma";
 import { createSaleSchema, CreateSaleSchemaType } from "./schema";
+import { revalidateTag } from "next/cache";
 
 const createSale = async (data: CreateSaleSchemaType) => {
   createSaleSchema.parse(data);
@@ -40,7 +41,18 @@ const createSale = async (data: CreateSaleSchemaType) => {
         unitPrice: productDB.price,
       },
     });
+
+    await db.product.update({
+      where: {
+        id: product.id,
+      },
+      data: {
+        stock: productDB.stock - product.quantity,
+      },
+    });
   }
+
+  revalidateTag("get-products");
 };
 
 export default createSale;
