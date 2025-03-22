@@ -4,9 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import formatCurrency from "@/app/_helpers/currency";
 import { dateFormat } from "@/app/_helpers/date-format";
-import { Button } from "@/app/_components/ui/button";
-import { MoreHorizontal } from "lucide-react";
 import { SalesDTO } from "@/app/data-access/sales/query-sales";
+import UpsertSaleDropdownMenu from "./upsert-sale-dropdown-menu";
 
 const saleTableColumns: ColumnDef<SalesDTO>[] = [
   {
@@ -39,10 +38,8 @@ const saleTableColumns: ColumnDef<SalesDTO>[] = [
   },
   {
     header: "Ações",
-    cell: () => (
-      <Button variant="ghost">
-        <MoreHorizontal size={16} />
-      </Button>
+    cell: ({ row: { original: currentSale } }) => (
+      <UpsertSaleDropdownMenu sale={currentSale} />
     ),
   },
 ];
