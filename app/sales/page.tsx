@@ -1,8 +1,11 @@
 "use server";
 
 import { ComboboxOption } from "../_components/ui/combobox";
+import { DataTable } from "../_components/ui/data-table";
 import { queryProduct } from "../data-access/product/query-product";
+import { cachedGetSales } from "../data-access/sales/query-sales";
 import CreateSalesButton from "./_components/create-sales-button";
+import saleTableColumns from "./_components/table-columns";
 
 const Sales = async () => {
   const products = await queryProduct();
@@ -10,6 +13,8 @@ const Sales = async () => {
     label: product.name,
     value: product.id,
   }));
+
+  const sales = await cachedGetSales();
 
   return (
     <>
@@ -27,10 +32,10 @@ const Sales = async () => {
           />
         </div>
 
-        {/* <DataTable
-          columns={tableProducts}
-          data={JSON.parse(JSON.stringify(products))}
-        /> */}
+        <DataTable
+          columns={saleTableColumns}
+          data={JSON.parse(JSON.stringify(sales))}
+        />
       </div>
     </>
   );

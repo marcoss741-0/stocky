@@ -55,6 +55,7 @@ const createSaleAction = actionClient
       }
     });
     revalidateTag("get-products");
+    revalidateTag("get-sales");
   });
 
 export default createSaleAction;

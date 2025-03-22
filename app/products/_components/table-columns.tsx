@@ -1,14 +1,14 @@
 "use client";
 
 import { Badge } from "@/app/_components/ui/badge";
-import { Product } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { CircleDashedIcon } from "lucide-react";
 
 import TableDropdownMenu from "./table-dropdown-menu";
 import formatCurrency from "@/app/_helpers/currency";
+import { ProductDTO } from "@/app/data-access/product/query-product";
 
-export const tableProducts: ColumnDef<Product>[] = [
+export const tableProducts: ColumnDef<ProductDTO>[] = [
   {
     accessorKey: "name",
     header: "Produto",
@@ -16,10 +16,7 @@ export const tableProducts: ColumnDef<Product>[] = [
   {
     accessorKey: "price",
     header: "Preço",
-    cell: (row) => {
-      const product = row.row.original;
-      return formatCurrency(Number(product.price));
-    },
+    cell: (row) => formatCurrency(Number(row.row.original.price)),
   },
   {
     accessorKey: "stock",
@@ -49,9 +46,3 @@ export const tableProducts: ColumnDef<Product>[] = [
     cell: (row) => <TableDropdownMenu row={row.row.original} />,
   },
 ];
-
-const TableColumns = () => {
-  return <div></div>;
-};
-
-export default TableColumns;
