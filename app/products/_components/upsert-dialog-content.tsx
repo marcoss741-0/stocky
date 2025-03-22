@@ -1,5 +1,5 @@
 "use client";
-import upsertProducts from "@/app/_actions/products/upsert-products";
+import upsertProductsActions from "@/app/_actions/products/upsert-products";
 import {
   formSchema,
   UpsertProductSchema,
@@ -25,6 +25,8 @@ import { Loader } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { NumericFormat } from "react-number-format";
 import { Form } from "@/app/_components/ui/form";
+import { useAction } from "next-safe-action/hooks";
+import { toast } from "sonner";
 
 interface UpsertProductsDialogProps {
   isOpen?: () => void;
@@ -45,13 +47,18 @@ const UpsertProductsDialog = ({
     },
   });
 
-  const onSubmit = async (data: UpsertProductSchema) => {
-    try {
-      await upsertProducts({ ...data, id: defaultValues?.id });
+  const { execute: executeUpsertProducts } = useAction(upsertProductsActions, {
+    onError: () => {
+      toast.error("Ocorreu um erro ao salvar o produto.");
+    },
+    onSuccess: () => {
       isOpen?.();
-    } catch (e) {
-      console.log(e);
-    }
+      toast.success("Produto salvo com sucesso.");
+    },
+  });
+
+  const onSubmit = async (data: UpsertProductSchema) => {
+    executeUpsertProducts({ ...data, id: defaultValues?.id });
   };
   const isEditing = !!defaultValues;
   return (

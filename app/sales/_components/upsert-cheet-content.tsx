@@ -36,8 +36,9 @@ import {
 } from "@/app/_components/ui/table";
 import formatCurrency from "@/app/_helpers/currency";
 import TableDropdownMenuSales from "./table-dropdown-menu";
-import createSale from "@/app/_actions/sales/create-sale";
+import createSaleAction from "@/app/_actions/sales/create-sale";
 import { toast } from "sonner";
+import { useAction } from "next-safe-action/hooks";
 
 interface UpsertCheetDialogProps {
   products: Product[];
@@ -135,6 +136,7 @@ const UpsertCheetDialog = ({
       ];
     });
   };
+
   const totalProducts = useMemo(() => {
     return selectedProduct.reduce((acc, product) => {
       return acc + product.price * product.quantity;
@@ -145,20 +147,23 @@ const UpsertCheetDialog = ({
       return currentProducts.filter((product) => product.id !== productId);
     });
   };
-  const onSubmitSales = async () => {
-    try {
-      await createSale({
-        products: selectedProduct.map((product) => ({
-          id: product.id,
-          quantity: product.quantity,
-        })),
-      });
+
+  const { execute: executeCreateSale } = useAction(createSaleAction, {
+    onError: () => {
+      toast.error("Ocorreu um erro ao cadastrar a venda.");
+    },
+    onSuccess: () => {
       toast.success("Venda cadastrada com sucesso");
       onClose();
-    } catch (error) {
-      toast.error("Ocorreu um erro ao cadastrar a venda.");
-      console.error(error);
-    }
+    },
+  });
+  const onSubmitSales = async () => {
+    executeCreateSale({
+      products: selectedProduct.map((product) => ({
+        id: product.id,
+        quantity: product.quantity,
+      })),
+    });
   };
 
   return (
