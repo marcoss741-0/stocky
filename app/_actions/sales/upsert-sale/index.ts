@@ -5,17 +5,43 @@ import { createSaleSchema } from "./schema";
 import { revalidateTag } from "next/cache";
 import { actionClient } from "@/app/_lib/safe-actions";
 
-const createSaleAction = actionClient
+const upsertSale = actionClient
   .schema(createSaleSchema)
-  .action(async ({ parsedInput: data }) => {
+  .action(async ({ parsedInput: { products, id } }) => {
+    const isUpdate = Boolean(id);
+
     await db.$transaction(async (tx) => {
+      if (isUpdate) {
+        const existingSale = await tx.sale.findUnique({
+          where: { id },
+          include: { saleProducts: true },
+        });
+
+        if (!existingSale) return;
+
+        await tx.sale.delete({
+          where: { id },
+        });
+
+        for (const product of existingSale.saleProducts) {
+          await tx.product.update({
+            where: { id: product.productId },
+            data: {
+              stock: {
+                increment: product.quantity,
+              },
+            },
+          });
+        }
+      }
+
       const sale = await tx.sale.create({
         data: {
           date: new Date(),
         },
       });
 
-      for (const product of data.products) {
+      for (const product of products) {
         const productDB = await db.product.findUnique({
           where: {
             id: product.id,
@@ -58,4 +84,4 @@ const createSaleAction = actionClient
     revalidateTag("get-sales");
   });
 
-export default createSaleAction;
+export default upsertSale;

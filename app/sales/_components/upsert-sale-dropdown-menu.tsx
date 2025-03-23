@@ -19,7 +19,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/app/_components/ui/dropdown-menu";
-import { Sale } from "@prisma/client";
+import { Sheet, SheetTrigger } from "@/app/_components/ui/sheet";
 import {
   ClipboardCopyIcon,
   Edit,
@@ -28,12 +28,24 @@ import {
 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { toast } from "sonner";
+import UpsertCheetDialog from "./upsert-cheet-content";
+import { ProductDTO } from "@/app/data-access/product/query-product";
+import { ComboboxOption } from "@/app/_components/ui/combobox";
+import { SalesDTO } from "@/app/data-access/sales/query-sales";
+import { useState } from "react";
 
 interface UpsertSaleDropdownMenuProps {
-  sale: Pick<Sale, "id">;
+  products: ProductDTO[];
+  productsOptions: ComboboxOption[];
+  sale: Pick<SalesDTO, "id" | "saleProducts">;
 }
 
-const UpsertSaleDropdownMenu = ({ sale }: UpsertSaleDropdownMenuProps) => {
+const UpsertSaleDropdownMenu = ({
+  sale,
+  products,
+  productsOptions,
+}: UpsertSaleDropdownMenuProps) => {
+  const [upsertSheetIsOpen, setUpsertSheetIsOpen] = useState(false);
   const handleCopyId = (saleId: string) => {
     navigator.clipboard.writeText(saleId);
     toast.success("ID copiado para área de transferência!");
@@ -53,59 +65,76 @@ const UpsertSaleDropdownMenu = ({ sale }: UpsertSaleDropdownMenuProps) => {
   };
   return (
     <>
-      <AlertDialog>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="cursor-pointer">
-              <MoreHorizontalIcon size={16} />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel className="text-center font-semibold">
-              Ações
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
+      <Sheet open={upsertSheetIsOpen} onOpenChange={setUpsertSheetIsOpen}>
+        <AlertDialog>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="cursor-pointer">
+                <MoreHorizontalIcon size={16} />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel className="text-center font-semibold">
+                Ações
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
 
-            <DropdownMenuItem
-              className="gap-1.5"
-              onClick={() => {
-                handleCopyId(sale.id);
-              }}
-            >
-              <ClipboardCopyIcon size={16} />
-              Copiar ID
-            </DropdownMenuItem>
-
-            <DropdownMenuItem className="gap-1.5" onClick={() => {}}>
-              <Edit size={16} />
-              Editar venda
-            </DropdownMenuItem>
-
-            <AlertDialogTrigger asChild>
-              <DropdownMenuItem className="w-full gap-1.5" onClick={() => {}}>
-                <Trash2Icon size={16} />
-                Excluir
+              <DropdownMenuItem
+                className="gap-1.5"
+                onClick={() => {
+                  handleCopyId(sale.id);
+                }}
+              >
+                <ClipboardCopyIcon size={16} />
+                Copiar ID
               </DropdownMenuItem>
-            </AlertDialogTrigger>
-          </DropdownMenuContent>
-        </DropdownMenu>
 
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Você esta prestes a excluir esta venda. Esta ação não pode ser
-              desfeita. Deseja contiuar?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleContinueClick}>
-              Continuar
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+              <SheetTrigger asChild>
+                <DropdownMenuItem className="gap-1.5" onClick={() => {}}>
+                  <Edit size={16} />
+                  Editar venda
+                </DropdownMenuItem>
+              </SheetTrigger>
+
+              <AlertDialogTrigger asChild>
+                <DropdownMenuItem className="w-full gap-1.5" onClick={() => {}}>
+                  <Trash2Icon size={16} />
+                  Excluir
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Você esta prestes a excluir esta venda. Esta ação não pode ser
+                desfeita. Deseja contiuar?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleContinueClick}>
+                Continuar
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        <UpsertCheetDialog
+          isOpen={upsertSheetIsOpen}
+          setSheetIsOpen={setUpsertSheetIsOpen}
+          saleId={sale.id}
+          products={products}
+          data={productsOptions}
+          defaultSelectedProducts={sale.saleProducts.map((saleProduct) => ({
+            quantity: saleProduct.quantity,
+            price: Number(saleProduct.price),
+            id: saleProduct.productId,
+            name: saleProduct.productName,
+          }))}
+        />
+      </Sheet>
     </>
   );
 };

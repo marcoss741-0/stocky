@@ -22,7 +22,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckIcon, PlusIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { Product } from "@prisma/client";
 import {
   Table,
@@ -36,14 +36,17 @@ import {
 } from "@/app/_components/ui/table";
 import formatCurrency from "@/app/_helpers/currency";
 import TableDropdownMenuSales from "./table-dropdown-menu";
-import createSaleAction from "@/app/_actions/sales/create-sale";
+import upsertSale from "@/app/_actions/sales/upsert-sale";
 import { toast } from "sonner";
 import { useAction } from "next-safe-action/hooks";
 
 interface UpsertCheetDialogProps {
   products: Product[];
   data: ComboboxOption[];
-  onClose: () => void;
+  defaultSelectedProducts?: SelectedProducts[];
+  saleId?: string;
+  isOpen?: boolean;
+  setSheetIsOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 interface SelectedProducts {
@@ -56,7 +59,10 @@ interface SelectedProducts {
 const UpsertCheetDialog = ({
   data,
   products,
-  onClose,
+  defaultSelectedProducts,
+  saleId,
+  isOpen,
+  setSheetIsOpen,
 }: UpsertCheetDialogProps) => {
   const formSchema = z.object({
     productId: z.string().uuid({
@@ -78,8 +84,19 @@ const UpsertCheetDialog = ({
   });
 
   const [selectedProduct, setSelectedProduct] = useState<SelectedProducts[]>(
-    [],
+    defaultSelectedProducts || [],
   );
+
+  useEffect(() => {
+    if (!isOpen) {
+      form.reset();
+      setSelectedProduct([]);
+    }
+  }, [form, isOpen]);
+  useEffect(() => {
+    setSelectedProduct(defaultSelectedProducts ?? []);
+  }, [defaultSelectedProducts]);
+
   const onSubmit = (data: FormSchemaType) => {
     const selectedProduct = products.find(
       (product) => product.id === data.productId,
@@ -148,17 +165,18 @@ const UpsertCheetDialog = ({
     });
   };
 
-  const { execute: executeCreateSale } = useAction(createSaleAction, {
+  const { execute: executeUpsertSale } = useAction(upsertSale, {
     onError: () => {
       toast.error("Ocorreu um erro ao cadastrar a venda.");
     },
     onSuccess: () => {
       toast.success("Venda cadastrada com sucesso");
-      onClose();
+      setSheetIsOpen?.(false);
     },
   });
   const onSubmitSales = async () => {
-    executeCreateSale({
+    executeUpsertSale({
+      id: saleId,
       products: selectedProduct.map((product) => ({
         id: product.id,
         quantity: product.quantity,

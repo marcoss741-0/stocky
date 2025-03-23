@@ -9,12 +9,17 @@ import saleTableColumns from "./_components/table-columns";
 
 const Sales = async () => {
   const products = await queryProduct();
+  const sales = await cachedGetSales();
   const productOptions: ComboboxOption[] = products.map((product) => ({
     label: product.name,
     value: product.id,
   }));
 
-  const sales = await cachedGetSales();
+  const tableData = sales.map((sale) => ({
+    ...sale,
+    products,
+    productsOptions: productOptions,
+  }));
 
   return (
     <>
@@ -32,10 +37,7 @@ const Sales = async () => {
           />
         </div>
 
-        <DataTable
-          columns={saleTableColumns}
-          data={JSON.parse(JSON.stringify(sales))}
-        />
+        <DataTable columns={saleTableColumns} data={tableData} />
       </div>
     </>
   );

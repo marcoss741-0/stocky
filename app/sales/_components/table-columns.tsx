@@ -6,8 +6,15 @@ import formatCurrency from "@/app/_helpers/currency";
 import { dateFormat } from "@/app/_helpers/date-format";
 import { SalesDTO } from "@/app/data-access/sales/query-sales";
 import UpsertSaleDropdownMenu from "./upsert-sale-dropdown-menu";
+import { ProductDTO } from "@/app/data-access/product/query-product";
+import { ComboboxOption } from "@/app/_components/ui/combobox";
 
-const saleTableColumns: ColumnDef<SalesDTO>[] = [
+interface SaleTableColumnsProps extends SalesDTO {
+  products: ProductDTO[];
+  productsOptions: ComboboxOption[];
+}
+
+const saleTableColumns: ColumnDef<SaleTableColumnsProps>[] = [
   {
     accessorKey: "productsName",
     header: "Produtos",
@@ -39,7 +46,11 @@ const saleTableColumns: ColumnDef<SalesDTO>[] = [
   {
     header: "Ações",
     cell: ({ row: { original: currentSale } }) => (
-      <UpsertSaleDropdownMenu sale={currentSale} />
+      <UpsertSaleDropdownMenu
+        sale={currentSale}
+        products={currentSale.products}
+        productsOptions={currentSale.productsOptions}
+      />
     ),
   },
 ];

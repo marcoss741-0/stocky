@@ -28,7 +28,8 @@ const CreateSalesButton = ({
           </Button>
         </SheetTrigger>
         <UpsertCheetDialog
-          onClose={() => setSheetIsopen(false)}
+          isOpen={sheetIsopen}
+          setSheetIsOpen={setSheetIsopen}
           products={products}
           data={productOptions}
         />
