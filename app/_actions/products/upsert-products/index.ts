@@ -15,6 +15,8 @@ const upsertProductsActions = actionClient
     });
 
     revalidateTag("get-products");
+    revalidateTag("get-sales");
+    revalidateTag("get-dashboard");
   });
 
 export default upsertProductsActions;

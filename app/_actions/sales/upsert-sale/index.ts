@@ -82,6 +82,7 @@ const upsertSale = actionClient
     });
     revalidateTag("get-products");
     revalidateTag("get-sales");
+    revalidateTag("get-dashboard");
   });
 
 export default upsertSale;

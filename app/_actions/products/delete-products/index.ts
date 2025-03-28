@@ -11,6 +11,8 @@ const deleteProductsActions = actionClient
     await db.product.delete({ where: { id } });
 
     revalidateTag("get-products");
+    revalidateTag("get-sales");
+    revalidateTag("get-dashboard");
   });
 
 export default deleteProductsActions;
