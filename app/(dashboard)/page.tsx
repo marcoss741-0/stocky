@@ -3,6 +3,7 @@
 import Header from "../_components/header";
 import formatCurrency from "../_helpers/currency";
 import { getDashboard } from "../data-access/dashboard/query-dashboard";
+import RevenueChart from "./_components/revenue-chart";
 import SummaryCards, {
   SummaryCardIcon,
   SummaryCardTitle,
@@ -16,8 +17,14 @@ import {
 } from "lucide-react";
 
 const Home = async () => {
-  const { todayRevenue, totalProducts, totalSales, totalStock, totalRevenue } =
-    await getDashboard();
+  const {
+    todayRevenue,
+    totalProducts,
+    totalSales,
+    totalStock,
+    totalRevenue,
+    totalRevenue14LastDays,
+  } = await getDashboard();
 
   return (
     <>
@@ -62,6 +69,14 @@ const Home = async () => {
             <SummaryCardTitle>Produtos</SummaryCardTitle>
             <SummaryCardValue>{totalProducts}</SummaryCardValue>
           </SummaryCards>
+        </div>
+
+        <div className="grid grid-cols-3 gap-6">
+          <div className="col-span-2 space-y-1 rounded-xl bg-slate-100 p-6">
+            <span className="text-xs text-[#00A180]">Últimos 14 dias</span>
+            <h1 className="text-3xl font-semibold text-slate-900">Receita</h1>
+            <RevenueChart data={totalRevenue14LastDays} />
+          </div>
         </div>
       </div>
     </>
