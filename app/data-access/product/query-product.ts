@@ -2,8 +2,10 @@ import { Product } from "@prisma/client";
 import { db } from "../../_lib/prisma";
 import { unstable_cache } from "next/cache";
 
+export type ProductStatus = "Em estoque" | "Fora de estoque";
+
 export interface ProductDTO extends Product {
-  status: "Em estoque" | "Fora de estoque";
+  status: ProductStatus;
 }
 
 export const queryProduct = async (): Promise<ProductDTO[]> => {

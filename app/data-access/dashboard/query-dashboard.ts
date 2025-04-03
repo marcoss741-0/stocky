@@ -3,23 +3,31 @@
 import { db } from "@/app/_lib/prisma";
 import { unstable_cache } from "next/cache";
 import dayjs from "dayjs";
+import { ProductStatus } from "../product/query-product";
 
 export interface DayTotalRevenue {
   day: string;
   totalRevenue: number;
 }
 
+export interface MostSoldProducts {
+  name: string;
+  totalSold: number;
+  price: number;
+  id: string;
+  status: ProductStatus;
+}
 interface DashboardDto {
   totalProducts: number;
   totalStock: number;
   totalSales: number;
   totalRevenue: number;
   todayRevenue: number;
+  mostSoldProducts: MostSoldProducts[];
   totalRevenue14LastDays: DayTotalRevenue[];
 }
 
 export const getDashboard = async (): Promise<DashboardDto> => {
-  // const today = dayjs().endOf("day").toDate();
   const last14Days = [13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0].map((day) =>
     dayjs().subtract(day, "day").endOf("day"),
   );
@@ -60,7 +68,6 @@ export const getDashboard = async (): Promise<DashboardDto> => {
     _sum: { stock: true },
   });
 
-  //await new Promise((resolve) => setTimeout(resolve, 3500));
   const totalRevenueQuery = `
     SELECT SUM("SaleProduct"."unitPrice" * "SaleProduct"."quantity") as "totalRevenue"
     FROM "SaleProduct"
@@ -69,23 +76,63 @@ export const getDashboard = async (): Promise<DashboardDto> => {
   const totalRevenuePromise =
     await db.$queryRawUnsafe<{ totalRevenue: number }[]>(totalRevenueQuery);
 
-  const [totalProducts, todayRevenue, totalSales, totalStock, totalRevenue] =
-    await Promise.all([
-      totalProductsPromise,
-      todayRevenuePromise,
-      totalSalesPromise,
-      totalStockPromise,
-      totalRevenuePromise,
-    ]);
+  const mostSoldProductsQuery = `
+  SELECT SUM("SaleProduct"."quantity") as "totalSold", "Product"."price", "Product"."stock", "Product"."name", "Product"."id"
+  FROM "SaleProduct" 
+  JOIN "Product" ON "SaleProduct"."productId" = "Product"."id"
+  GROUP BY "Product"."name", "Product"."price", "Product"."stock", "Product"."id"
+  ORDER BY "totalSold" DESC
+  LIMIT 6;
+`;
+
+  const mostSoldProductsPromise = await db.$queryRawUnsafe<
+    {
+      name: string;
+      totalSold: number;
+      stock: number;
+      price: number;
+      id: string;
+    }[]
+  >(mostSoldProductsQuery, startOfDay, endOfDay);
+
+  const [
+    totalProducts,
+    todayRevenue,
+    totalSales,
+    totalStock,
+    totalRevenue,
+    mostSoldProducts,
+  ] = await Promise.all([
+    totalProductsPromise,
+    todayRevenuePromise,
+    totalSalesPromise,
+    totalStockPromise,
+    totalRevenuePromise,
+    mostSoldProductsPromise,
+  ]);
+
+  // console.log(mostSoldProducts);
 
   return {
     totalRevenue: Number(totalRevenue[0]?.totalRevenue ?? 0),
 
     todayRevenue: Number(todayRevenue[0]?.todayRevenue ?? 0),
+
     totalProducts,
+
     totalSales,
+
     totalStock: Number(totalStock._sum.stock),
+
     totalRevenue14LastDays,
+
+    mostSoldProducts: mostSoldProducts.map((product) => ({
+      name: product.name,
+      totalSold: Number(product.totalSold),
+      price: Number(product.price),
+      id: product.id,
+      status: product.stock <= 0 ? "Fora de estoque" : "Em estoque",
+    })),
   };
 };
 

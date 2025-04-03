@@ -17,14 +17,14 @@ interface RevenueChartProps {
 const chartConfig: ChartConfig = {
   totalRevenue: {
     label: "Receita",
-    color: "#00A180",
+    color: "#50C878",
   },
 } satisfies ChartConfig;
 
 const RevenueChart = ({ data }: RevenueChartProps) => {
   return (
     <>
-      <ChartContainer config={chartConfig} className="h-[250px] min-h-0 w-full">
+      <ChartContainer config={chartConfig} className="min-h-0 w-full">
         <BarChart accessibilityLayer data={data}>
           <CartesianGrid vertical={false} />
           <XAxis
@@ -37,7 +37,7 @@ const RevenueChart = ({ data }: RevenueChartProps) => {
             content={<ChartTooltipContent />}
             formatter={(x) => formatCurrency(Number(x))}
           />
-          <Bar dataKey="totalRevenue" radius={4} />
+          <Bar dataKey="totalRevenue" radius={4} className="fill-slate-900" />
         </BarChart>
       </ChartContainer>
     </>

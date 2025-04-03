@@ -1,12 +1,11 @@
 "use client";
 
-import { Badge } from "@/app/_components/ui/badge";
 import { ColumnDef } from "@tanstack/react-table";
-import { CircleDashedIcon } from "lucide-react";
 
 import TableDropdownMenu from "./table-dropdown-menu";
 import formatCurrency from "@/app/_helpers/currency";
 import { ProductDTO } from "@/app/data-access/product/query-product";
+import ProductStatusBadge from "@/app/_components/product-status-badge";
 
 export const tableProducts: ColumnDef<ProductDTO>[] = [
   {
@@ -25,19 +24,10 @@ export const tableProducts: ColumnDef<ProductDTO>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: (row) => {
-      const product = row.row.original;
+    cell: ({ row: { original: product } }) => {
       const label = product.stock <= 0 ? "Fora de estoque" : "Em estoque";
 
-      return (
-        <Badge
-          className="w-fit gap-1"
-          variant={product.stock <= 0 ? "outline" : "default"}
-        >
-          <CircleDashedIcon size={16} />
-          {label}
-        </Badge>
-      );
+      return <ProductStatusBadge status={label} />;
     },
   },
   {
