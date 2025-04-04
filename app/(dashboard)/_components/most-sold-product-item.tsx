@@ -1,9 +1,9 @@
 import ProductStatusBadge from "@/app/_components/product-status-badge";
 import formatCurrency from "@/app/_helpers/currency";
-import { MostSoldProducts } from "@/app/data-access/dashboard/query-dashboard";
+import { MostSoldProductsDto } from "@/app/data-access/dashboard/get-most-sold-products";
 
 interface MostSoldProductItemProps {
-  products: MostSoldProducts;
+  products: MostSoldProductsDto;
 }
 
 const MostSoldProductItem = ({ products }: MostSoldProductItemProps) => {

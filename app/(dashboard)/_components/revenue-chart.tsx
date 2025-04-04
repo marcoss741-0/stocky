@@ -7,7 +7,7 @@ import {
   ChartTooltipContent,
 } from "@/app/_components/ui/chart";
 import formatCurrency from "@/app/_helpers/currency";
-import { DayTotalRevenue } from "@/app/data-access/dashboard/query-dashboard";
+import { DayTotalRevenue } from "@/app/data-access/dashboard/get-last-14-days-revenue";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 interface RevenueChartProps {
