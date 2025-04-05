@@ -1,9 +1,7 @@
-interface Params {
-  id: string;
-}
+import React from "react";
 
-const ProductDetailsPage = ({ params: { id } }: { params: Params }) => {
-  return <h1>Product ID: {id}</h1>;
+const ProductPageId = () => {
+  return <div>Detalhes do Produto</div>;
 };
 
-export default ProductDetailsPage;
+export default ProductPageId;
