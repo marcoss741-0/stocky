@@ -10,6 +10,7 @@ import { revalidateTag } from "next/cache";
 const TotalProductsCard = async () => {
   const totalProducts = await cachedGetTotalProducts();
   revalidateTag("get-total-products");
+
   return (
     <>
       <SummaryCards>

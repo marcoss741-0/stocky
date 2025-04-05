@@ -53,6 +53,6 @@ export const cachedGetMostSoldProducts = unstable_cache(
   ["getMostSoldProducts"],
   {
     tags: ["get-most-sold-products"], // Cache invalidation tags
-    revalidate: 60,
+    revalidate: 10,
   },
 );

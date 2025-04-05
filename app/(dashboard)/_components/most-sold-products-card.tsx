@@ -3,9 +3,12 @@ import MostSoldProductItem, {
   MostSoldProductItemSkeleton,
 } from "./most-sold-product-item";
 import { Skeleton } from "@/app/_components/ui/skeleton";
+import { revalidateTag } from "next/cache";
 
 const MostSoldProductsCard = async () => {
-  const mostSoldProducts = await cachedGetMostSoldProducts(); // Assuming this is a function that fetches the most sold products
+  const mostSoldProducts = await cachedGetMostSoldProducts();
+  revalidateTag("get-most-sold-products");
+
   return (
     <>
       <div className="flex h-full flex-col space-y-4 overflow-hidden rounded-xl bg-slate-100 p-6">
