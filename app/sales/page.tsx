@@ -3,13 +3,13 @@
 import Header from "../_components/header";
 import { ComboboxOption } from "../_components/ui/combobox";
 import { DataTable } from "../_components/ui/data-table";
-import { queryProduct } from "../data-access/product/query-product";
+import { cachedGetProducts } from "../data-access/product/query-product";
 import { cachedGetSales } from "../data-access/sales/query-sales";
 import CreateSalesButton from "./_components/create-sales-button";
 import saleTableColumns from "./_components/table-columns";
 
 const Sales = async () => {
-  const products = await queryProduct();
+  const products = await cachedGetProducts();
   const sales = await cachedGetSales();
   const productOptions: ComboboxOption[] = products.map((product) => ({
     label: product.name,
