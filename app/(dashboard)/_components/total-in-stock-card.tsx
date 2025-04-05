@@ -5,11 +5,9 @@ import SummaryCards, {
   SummaryCardValue,
 } from "./summary-cards";
 import cachedGetTotalInStock from "@/app/data-access/dashboard/get-total-in-stock";
-import { revalidateTag } from "next/cache";
 
 const TotalInStockCard = async () => {
   const totalStock = await cachedGetTotalInStock();
-  revalidateTag("get-total-in-stock");
 
   return (
     <>

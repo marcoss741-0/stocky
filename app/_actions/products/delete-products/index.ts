@@ -12,7 +12,14 @@ const deleteProductsActions = actionClient
 
     revalidateTag("get-products");
     revalidateTag("get-sales");
-    revalidateTag("get-dashboard");
+
+    revalidateTag("get-total-sales");
+    revalidateTag("get-total-products");
+    revalidateTag("get-total-revenue");
+    revalidateTag("get-total-in-stock");
+    revalidateTag("get-today-revenue");
+    revalidateTag("get-most-sold-products");
+    revalidateTag("get-last-14-days-revenue");
   });
 
 export default deleteProductsActions;

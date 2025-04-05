@@ -1,10 +1,9 @@
 import { cachedGetLast14DaysRevenue } from "@/app/data-access/dashboard/get-last-14-days-revenue";
 import RevenueChart from "./revenue-chart";
-import { revalidateTag } from "next/cache";
 
 const Last14DaysRevenueCard = async () => {
   const totalRevenue14LastDays = await cachedGetLast14DaysRevenue();
-  revalidateTag("get-last-14-days-revenue");
+
   return (
     <>
       <div className="flex h-full flex-col space-y-1 overflow-hidden rounded-xl bg-slate-100 p-6">

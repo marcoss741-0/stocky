@@ -6,11 +6,9 @@ import SummaryCards, {
   SummaryCardTitle,
   SummaryCardValue,
 } from "./summary-cards";
-import { revalidateTag } from "next/cache";
 
 const TotalRevenueCard = async () => {
   const totalRevenueValue = await cachedGetTotalRevenue();
-  revalidateTag("get-total-revenue");
 
   return (
     <>
