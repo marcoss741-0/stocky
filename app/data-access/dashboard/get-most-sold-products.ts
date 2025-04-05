@@ -10,7 +10,7 @@ export interface MostSoldProductsDto {
 }
 
 const getMostSoldProducts = async (): Promise<MostSoldProductsDto[]> => {
-  await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate a delay
+  await new Promise((resolve) => setTimeout(resolve, 3000));
 
   const startOfDay = new Date(new Date().setHours(0, 0, 0, 0));
   const endOfDay = new Date(new Date().setHours(23, 59, 59, 999));

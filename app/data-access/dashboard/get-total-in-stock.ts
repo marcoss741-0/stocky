@@ -1,7 +1,7 @@
 import { db } from "@/app/_lib/prisma";
 
 const getTotalInStock = async () => {
-  await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate a delay
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   const totalInStock = await db.product.aggregate({
     _sum: { stock: true },
   });

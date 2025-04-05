@@ -1,5 +1,8 @@
 import getMostSoldProducts from "@/app/data-access/dashboard/get-most-sold-products";
-import MostSoldProductItem from "./most-sold-product-item";
+import MostSoldProductItem, {
+  MostSoldProductItemSkeleton,
+} from "./most-sold-product-item";
+import { Skeleton } from "@/app/_components/ui/skeleton";
 
 const MostSoldProductsCard = async () => {
   const mostSoldProducts = await getMostSoldProducts(); // Assuming this is a function that fetches the most sold products
@@ -16,6 +19,19 @@ const MostSoldProductsCard = async () => {
         </div>
       </div>
     </>
+  );
+};
+
+export const MostSoldProductsSkeleton = () => {
+  return (
+    <Skeleton className="bg-white p-6">
+      <div className="space-y-2">
+        <div className="h-5 w-[86.26px] rounded-md bg-gray-200" />
+        <div className="h-4 w-48 rounded-md bg-gray-200" />
+        <MostSoldProductItemSkeleton />
+        <MostSoldProductItemSkeleton />
+      </div>
+    </Skeleton>
   );
 };
 
