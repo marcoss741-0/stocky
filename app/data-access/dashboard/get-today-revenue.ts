@@ -1,5 +1,6 @@
 "use server";
 
+import "server-only"; // This is required to use server-only modules in a server component
 import { db } from "@/app/_lib/prisma";
 import { unstable_cache } from "next/cache";
 
