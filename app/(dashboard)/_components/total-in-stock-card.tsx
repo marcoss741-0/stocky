@@ -4,10 +4,10 @@ import SummaryCards, {
   SummaryCardTitle,
   SummaryCardValue,
 } from "./summary-cards";
-import getTotalInStock from "@/app/data-access/dashboard/get-total-in-stock";
+import cachedGetTotalInStock from "@/app/data-access/dashboard/get-total-in-stock";
 
 const TotalInStockCard = async () => {
-  const totalStock = await getTotalInStock(); // Replace with actual data fetching logic
+  const totalStock = await cachedGetTotalInStock(); // Replace with actual data fetching logic
   return (
     <>
       <SummaryCards>

@@ -1,5 +1,5 @@
 import formatCurrency from "@/app/_helpers/currency";
-import getTotalRevenue from "@/app/data-access/dashboard/get-total-revenue";
+import cachedGetTotalRevenue from "@/app/data-access/dashboard/get-total-revenue";
 import { DollarSignIcon } from "lucide-react";
 import SummaryCards, {
   SummaryCardIcon,
@@ -8,7 +8,7 @@ import SummaryCards, {
 } from "./summary-cards";
 
 const TotalRevenueCard = async () => {
-  const totalRevenueValue = await getTotalRevenue();
+  const totalRevenueValue = await cachedGetTotalRevenue();
   return (
     <>
       <SummaryCards>

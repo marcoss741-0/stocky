@@ -3,13 +3,14 @@
 import { db } from "@/app/_lib/prisma";
 import { Decimal } from "@prisma/client/runtime/library";
 import dayjs from "dayjs";
+import { unstable_cache } from "next/cache";
 
 export interface DayTotalRevenueDto {
   day: string;
   totalRevenue: number;
 }
 
-export const getLast14DaysRevenue = async (): Promise<DayTotalRevenueDto[]> => {
+const getLast14DaysRevenue = async (): Promise<DayTotalRevenueDto[]> => {
   await new Promise((resolve) => setTimeout(resolve, 3000));
 
   const today = dayjs().endOf("day").toDate();
@@ -39,3 +40,11 @@ export const getLast14DaysRevenue = async (): Promise<DayTotalRevenueDto[]> => {
   }
   return totalLast14DaysRevenue;
 };
+
+export default getLast14DaysRevenue;
+
+export const cachedGetLast14DaysRevenue = unstable_cache(
+  getLast14DaysRevenue,
+  ["cachedGetLast14DaysRevenue"],
+  { tags: ["get-last-14-days-revenue"], revalidate: 60 },
+);

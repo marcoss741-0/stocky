@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/app/_lib/prisma";
+import { unstable_cache } from "next/cache";
 
 const getTotalRevenue = async (): Promise<number> => {
   await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -16,3 +17,12 @@ const getTotalRevenue = async (): Promise<number> => {
 };
 
 export default getTotalRevenue;
+
+export const cachedGetTotalRevenue = unstable_cache(
+  getTotalRevenue,
+  ["getTotalRevenue"],
+  {
+    tags: ["get-total-revenue"],
+    revalidate: 60,
+  },
+);

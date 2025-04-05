@@ -2,6 +2,7 @@
 
 import { db } from "@/app/_lib/prisma";
 import { ProductStatus } from "../product/query-product";
+import { unstable_cache } from "next/cache";
 
 export interface MostSoldProductsDto {
   name: string;
@@ -46,3 +47,12 @@ const getMostSoldProducts = async (): Promise<MostSoldProductsDto[]> => {
 };
 
 export default getMostSoldProducts;
+
+export const cachedGetMostSoldProducts = unstable_cache(
+  getMostSoldProducts,
+  ["getMostSoldProducts"],
+  {
+    tags: ["get-most-sold-products"], // Cache invalidation tags
+    revalidate: 60,
+  },
+);

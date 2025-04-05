@@ -1,11 +1,11 @@
-import getMostSoldProducts from "@/app/data-access/dashboard/get-most-sold-products";
+import cachedGetMostSoldProducts from "@/app/data-access/dashboard/get-most-sold-products";
 import MostSoldProductItem, {
   MostSoldProductItemSkeleton,
 } from "./most-sold-product-item";
 import { Skeleton } from "@/app/_components/ui/skeleton";
 
 const MostSoldProductsCard = async () => {
-  const mostSoldProducts = await getMostSoldProducts(); // Assuming this is a function that fetches the most sold products
+  const mostSoldProducts = await cachedGetMostSoldProducts(); // Assuming this is a function that fetches the most sold products
   return (
     <>
       <div className="flex h-full flex-col space-y-4 overflow-hidden rounded-xl bg-slate-100 p-6">

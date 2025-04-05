@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/app/_lib/prisma";
+import { unstable_cache } from "next/cache";
 
 const getTotalInStock = async () => {
   await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -12,3 +13,12 @@ const getTotalInStock = async () => {
 };
 
 export default getTotalInStock;
+
+export const cachedGetTotalInStock = unstable_cache(
+  getTotalInStock,
+  ["getTotalInStock"],
+  {
+    tags: ["get-total-in-stock"],
+    revalidate: 60,
+  },
+);

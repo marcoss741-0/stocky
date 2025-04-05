@@ -1,6 +1,7 @@
 "use server";
 
 import { db } from "@/app/_lib/prisma";
+import { unstable_cache } from "next/cache";
 
 const getTodayRevenue = async () => {
   await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -22,3 +23,12 @@ const getTodayRevenue = async () => {
 };
 
 export default getTodayRevenue;
+
+export const cachedTodayRevenue = unstable_cache(
+  getTodayRevenue,
+  ["getTodayRevenue"],
+  {
+    tags: ["get-today-revenue"],
+    revalidate: 60,
+  },
+);
