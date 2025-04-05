@@ -4,10 +4,10 @@ import SummaryCards, {
   SummaryCardTitle,
   SummaryCardValue,
 } from "./summary-cards";
-import getTotalSales from "@/app/data-access/dashboard/get-total-sales";
+import cachedGetTotalSales from "@/app/data-access/dashboard/get-total-sales";
 
 const TotalSalesCard = async () => {
-  const totalSales = await getTotalSales();
+  const totalSales = await cachedGetTotalSales();
   return (
     <>
       <SummaryCards>
